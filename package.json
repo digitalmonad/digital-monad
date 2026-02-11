@@ -8,24 +8,34 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@tailwindcss/postcss": "4.0.0-alpha.13",
     "@types/node": "20.11.17",
     "@types/react": "18.2.55",
     "@types/react-dom": "18.2.19",
     "@vercel/analytics": "^1.6.1",
     "@vercel/speed-insights": "^1.3.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "eslint": "^9.39.2",
     "eslint-config-next": "16.1.6",
     "geist": "1.2.2",
     "gray-matter": "^4.0.3",
+    "lucide-react": "^0.563.0",
     "next": "^16.1.6",
     "next-mdx-remote": "^4.4.1",
     "postcss": "^8.5.6",
+    "radix-ui": "^1.4.3",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "sugar-high": "^0.6.1",
-    "tailwindcss": "4.0.0-alpha.13",
+    "tw-animate-css": "^1.4.0",
     "typescript": "^5.9.3"
   },
-  "packageManager": "pnpm@10.23.0+sha512.21c4e5698002ade97e4efe8b8b4a89a8de3c85a37919f957e7a0f30f38fbc5bbdd05980ffe29179b2fb6e6e691242e098d945d1601772cad0fef5fb6411e2a4b"
+  "packageManager": "pnpm@10.23.0+sha512.21c4e5698002ade97e4efe8b8b4a89a8de3c85a37919f957e7a0f30f38fbc5bbdd05980ffe29179b2fb6e6e691242e098d945d1601772cad0fef5fb6411e2a4b",
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "shadcn": "^3.8.4",
+    "tailwind-merge": "^3.4.0",
+    "tailwindcss": "^4",
+    "tw-animate-css": "^1.4.0"
+  }
 }
