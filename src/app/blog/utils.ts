@@ -1,11 +1,13 @@
 import fs from "fs";
 import path from "path";
+import graymatter from "gray-matter";
 
 export type Metadata = {
   title: string;
   publishedAt: string;
   summary: string;
   image?: string;
+  categories?: string[];
 };
 
 export type Post = {
@@ -13,40 +15,6 @@ export type Post = {
   slug: string;
   content: string;
 };
-
-function parseFrontmatter(
-  fileContent: string,
-  source?: fs.PathOrFileDescriptor,
-): {
-  metadata: Metadata;
-  content: string;
-} {
-  const frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
-  const match = frontmatterRegex.exec(fileContent);
-
-  if (!match) {
-    const src = source ? ` in ${source}` : "";
-    throw new Error(`Missing or malformed frontmatter${src}`);
-  }
-
-  const frontMatterBlock = match[1];
-  const content = fileContent.replace(frontmatterRegex, "").trim();
-  const frontMatterLines = frontMatterBlock.trim().split("\n");
-  const metadata: Partial<Metadata> = {};
-
-  frontMatterLines.forEach((line) => {
-    const [key, ...valueArr] = line.split(": ");
-    let value = valueArr.join(": ").trim();
-    value = value.replace(/^['"](.*)['"]$/, "$1"); // Remove quotes
-    const k = key.trim() as keyof Metadata;
-    // Assign only if key is expected
-    if (k) {
-      metadata[k] = value;
-    }
-  });
-
-  return { metadata: metadata as Metadata, content };
-}
 
 function getMDXFiles(dir: fs.PathLike): string[] {
   return fs.readdirSync(dir).filter((file) => path.extname(file) === ".mdx");
@@ -57,7 +25,36 @@ function readMDXFile(filePath: fs.PathOrFileDescriptor): {
   content: string;
 } {
   const rawContent = fs.readFileSync(filePath, "utf-8");
-  return parseFrontmatter(rawContent, filePath);
+  const parsed = graymatter(rawContent);
+
+  const data = parsed.data ?? {};
+  const content: string = parsed.content ?? "";
+
+  const metadata: Metadata = {
+    title: data.title ? String(data.title) : "",
+    publishedAt: data.publishedAt ? String(data.publishedAt) : "",
+    summary: data.summary ? String(data.summary) : "",
+    image: data.image ? String(data.image) : undefined,
+    categories: undefined,
+  };
+
+  // Normalize categories to string[] | undefined
+  if (Array.isArray(data.categories)) {
+    metadata.categories = data.categories.map((c: unknown) => String(c));
+  } else if (typeof data.categories === "string") {
+    // allow comma-separated string or single value
+    metadata.categories = data.categories
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+  }
+
+  // Basic validation for required fields
+  if (!metadata.title || !metadata.publishedAt || !metadata.summary) {
+    throw new Error(`Missing required frontmatter fields in ${filePath}`);
+  }
+
+  return { metadata, content };
 }
 
 function getMDXData(dir: string): Post[] {
@@ -75,7 +72,7 @@ function getMDXData(dir: string): Post[] {
 }
 
 export function getBlogPosts(): Post[] {
-  return getMDXData(path.join(process.cwd(), "src", "app", "blog", "posts"));
+  return getMDXData(path.join(process.cwd(), "src", "app", "blog", "contents"));
 }
 
 export function formatDate(date: string, includeRelative = false): string {
