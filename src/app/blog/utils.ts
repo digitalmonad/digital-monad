@@ -1,17 +1,35 @@
 import fs from "fs";
 import path from "path";
 
-type Metadata = {
+export type Metadata = {
   title: string;
   publishedAt: string;
   summary: string;
   image?: string;
 };
 
-function parseFrontmatter(fileContent: string) {
+export type Post = {
+  metadata: Metadata;
+  slug: string;
+  content: string;
+};
+
+function parseFrontmatter(
+  fileContent: string,
+  source?: fs.PathOrFileDescriptor,
+): {
+  metadata: Metadata;
+  content: string;
+} {
   const frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
   const match = frontmatterRegex.exec(fileContent);
-  const frontMatterBlock = match![1];
+
+  if (!match) {
+    const src = source ? ` in ${source}` : "";
+    throw new Error(`Missing or malformed frontmatter${src}`);
+  }
+
+  const frontMatterBlock = match[1];
   const content = fileContent.replace(frontmatterRegex, "").trim();
   const frontMatterLines = frontMatterBlock.trim().split("\n");
   const metadata: Partial<Metadata> = {};
@@ -20,22 +38,29 @@ function parseFrontmatter(fileContent: string) {
     const [key, ...valueArr] = line.split(": ");
     let value = valueArr.join(": ").trim();
     value = value.replace(/^['"](.*)['"]$/, "$1"); // Remove quotes
-    metadata[key.trim() as keyof Metadata] = value;
+    const k = key.trim() as keyof Metadata;
+    // Assign only if key is expected
+    if (k) {
+      metadata[k] = value;
+    }
   });
 
   return { metadata: metadata as Metadata, content };
 }
 
-function getMDXFiles(dir) {
+function getMDXFiles(dir: fs.PathLike): string[] {
   return fs.readdirSync(dir).filter((file) => path.extname(file) === ".mdx");
 }
 
-function readMDXFile(filePath) {
+function readMDXFile(filePath: fs.PathOrFileDescriptor): {
+  metadata: Metadata;
+  content: string;
+} {
   const rawContent = fs.readFileSync(filePath, "utf-8");
-  return parseFrontmatter(rawContent);
+  return parseFrontmatter(rawContent, filePath);
 }
 
-function getMDXData(dir) {
+function getMDXData(dir: string): Post[] {
   const mdxFiles = getMDXFiles(dir);
   return mdxFiles.map((file) => {
     const { metadata, content } = readMDXFile(path.join(dir, file));
@@ -49,11 +74,11 @@ function getMDXData(dir) {
   });
 }
 
-export function getBlogPosts() {
+export function getBlogPosts(): Post[] {
   return getMDXData(path.join(process.cwd(), "src", "app", "blog", "posts"));
 }
 
-export function formatDate(date: string, includeRelative = false) {
+export function formatDate(date: string, includeRelative = false): string {
   const currentDate = new Date();
   if (!date.includes("T")) {
     date = `${date}T00:00:00`;
