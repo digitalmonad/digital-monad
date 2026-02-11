@@ -1,36 +1,18 @@
-# Portfolio Blog Starter
+# Personal Portfolio and Blog Site
 
-This is a porfolio site template complete with a blog. Includes:
+This is my portfolio and blogging site with following features:
 
-- MDX and Markdown support
-- Optimized for SEO (sitemap, robots, JSON-LD schema)
-- RSS Feed
-- Dynamic OG images
-- Syntax highlighting
-- Tailwind v4
-- Vercel Speed Insights / Web Analytics
-- Geist font
+- [x] MDX and Markdown support
+- [x] Optimized for SEO (sitemap, robots, JSON-LD schema)
+- [x] RSS Feed
+- [x] Dynamic OG images
 
-## Demo
+### Clone and Run
 
-https://portfolio-blog-starter.vercel.app
-
-## How to Use
-
-You can choose from one of the following two methods to use this repository:
-
-### One-Click Deploy
-
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=vercel-examples):
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/examples/tree/main/solutions/blog&project-name=blog&repository-name=blog)
-
-### Clone and Deploy
-
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [pnpm](https://pnpm.io/installation) to bootstrap the example:
+Execute [`git clone`](https://github.com/digitalmonad/digital-monad.git):
 
 ```bash
-pnpm create next-app --example https://github.com/vercel/examples/tree/main/solutions/blog blog
+git clone https://github.com/vercel/examples/tree/main/solutions/blog
 ```
 
 Then, run Next.js in development mode:
@@ -39,4 +21,4 @@ Then, run Next.js in development mode:
 pnpm dev
 ```
 
-Deploy it to the cloud with [Vercel](https://vercel.com/templates) ([Documentation](https://nextjs.org/docs/app/building-your-application/deploying)).
+or via any other package manager tou prefer (npm, yarn, bun, ...)
