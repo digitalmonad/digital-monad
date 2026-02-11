@@ -195,7 +195,6 @@ html {
   }
 }
 
-
 .prose .anchor {
   @apply absolute invisible no-underline;
 

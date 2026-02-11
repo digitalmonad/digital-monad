@@ -61,12 +61,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Navbar />
-          <main className="flex-auto max-w-xl lg:mx-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
-            {children}
-            <Footer />
-            <Analytics />
-            <SpeedInsights />
-          </main>
+          {children}
+          <Footer />
+          <Analytics />
+          <SpeedInsights />
         </ThemeProvider>
       </body>
     </html>

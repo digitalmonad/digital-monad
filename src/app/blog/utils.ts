@@ -8,6 +8,7 @@ export type Metadata = {
   summary: string;
   image?: string;
   categories?: string[];
+  tags?: string[];
 };
 
 export type Post = {
@@ -36,6 +37,7 @@ function readMDXFile(filePath: fs.PathOrFileDescriptor): {
     summary: data.summary ? String(data.summary) : "",
     image: data.image ? String(data.image) : undefined,
     categories: undefined,
+    tags: undefined,
   };
 
   // Normalize categories to string[] | undefined
@@ -44,6 +46,16 @@ function readMDXFile(filePath: fs.PathOrFileDescriptor): {
   } else if (typeof data.categories === "string") {
     // allow comma-separated string or single value
     metadata.categories = data.categories
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+  }
+
+  // Normalize tags to string[] | undefined
+  if (Array.isArray(data.tags)) {
+    metadata.tags = data.tags.map((t: unknown) => String(t));
+  } else if (typeof data.tags === "string") {
+    metadata.tags = data.tags
       .split(",")
       .map((s) => s.trim())
       .filter(Boolean);
@@ -73,6 +85,50 @@ function getMDXData(dir: string): Post[] {
 
 export function getBlogPosts(): Post[] {
   return getMDXData(path.join(process.cwd(), "src", "app", "blog", "contents"));
+}
+
+function buildCategoryIndex(posts: Post[]) {
+  const map: Record<string, Post[]> = {};
+
+  for (const post of posts) {
+    if (post.metadata.categories) {
+      for (const category of post.metadata.categories) {
+        if (!map[category]) {
+          map[category] = [];
+        }
+
+        map[category].push(post);
+      }
+    }
+  }
+
+  return map;
+}
+
+export function getAllCategories(): string[] {
+  const posts = getBlogPosts();
+  const categories = new Set<string>();
+
+  posts.forEach((post) => {
+    if (post.metadata.categories) {
+      post.metadata.categories.forEach((category) => categories.add(category));
+    }
+  });
+
+  return Array.from(categories).sort();
+}
+
+export function getAllTags(): string[] {
+  const posts = getBlogPosts();
+  const tags = new Set<string>();
+
+  posts.forEach((post) => {
+    if (post.metadata.tags) {
+      post.metadata.tags.forEach((tag) => tags.add(tag));
+    }
+  });
+
+  return Array.from(tags).sort();
 }
 
 export function formatDate(date: string, includeRelative = false): string {
