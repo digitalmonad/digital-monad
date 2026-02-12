@@ -84,7 +84,7 @@ export function MobileNavigtaion() {
 
 export function Navbar() {
   return (
-    <aside className="sticky top-0 z-50 mb-16 tracking-tight w-7xl mx-auto px-4 pt-4 pb-4 bg-background/80 backdrop-blur-xs">
+    <aside className="sticky top-0 z-50 mb-16 tracking-tight max-w-7xl w-full mx-auto pt-4 pb-4 bg-background/80 backdrop-blur-xs">
       <nav
         className="flex flex-row items-center justify-between relative px-0 fade md:overflow-auto scroll-pr-6"
         id="nav"

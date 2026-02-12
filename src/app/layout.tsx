@@ -56,11 +56,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="min-h-screen flex flex-col">
+          <div className="min-h-screen flex flex-col px-4">
             <Navbar />
-            <main className="max-w-xl mx-4 lg:mx-auto min-w-0 mt-6 flex flex-col px-2 md:px-0 flex-1">
-              {children}
-            </main>
+            <div className="mx-auto max-w-7xl w-full flex-1">{children}</div>
             <Footer />
           </div>
           <Analytics />
