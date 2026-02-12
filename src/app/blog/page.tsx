@@ -14,11 +14,9 @@ export default function Page() {
   const tags = getAllTags();
 
   return (
-    <div className="">
+    <div>
       <section>
-        <h1 className="font-semibold text-2xl mb-8 tracking-tighter">
-          My Blog
-        </h1>
+        <h1>My Blog</h1>
         <BlogPosts />
       </section>
       <aside className="w-full mt-8 lg:absolute md:w-72 xl:w-80 lg:right-0 lg:top-26 lg:pr-4 space-y-10">
@@ -32,7 +30,7 @@ export default function Page() {
               Categories
             </h2>
           </Link>
-          <div className="flex flex-col space-y-2">
+          <div className="flex flex-wrap gap-1">
             {categories.length > 0 ? (
               categories.map((category) => (
                 <Link key={category} href={`/blog/categories/${category}`}>
@@ -53,7 +51,7 @@ export default function Page() {
             <ArrowUpRight />
             <h2 className="font-semibold text-lg mb-2 tracking-tight">Tags</h2>
           </Link>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1">
             {tags.length > 0 ? (
               tags.map((tag) => (
                 <Link key={tag} href={`/blog/tags/${tag}`}>

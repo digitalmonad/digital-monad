@@ -181,19 +181,18 @@ html {
   body {
     @apply bg-background text-foreground;
   }
+
+  h1 {
+    @apply font-semibold text-2xl mb-8 tracking-tighter
+  }
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --sh-class: #4c97f8;
-    --sh-identifier: white;
-    --sh-keyword: #f47067;
-    --sh-string: #0fa295;
-  }
   html {
     color-scheme: dark;
   }
 }
+
 
 .prose .anchor {
   @apply absolute invisible no-underline;

@@ -131,6 +131,28 @@ export function getAllTags(): string[] {
   return Array.from(tags).sort();
 }
 
+export type CategoryWithCount = {
+  name: string;
+  count: number;
+};
+
+export function getCategoriesWithCount(): CategoryWithCount[] {
+  const posts = getBlogPosts();
+  const categoryMap = new Map<string, number>();
+
+  posts.forEach((post) => {
+    if (post.metadata.categories) {
+      post.metadata.categories.forEach((category) => {
+        categoryMap.set(category, (categoryMap.get(category) || 0) + 1);
+      });
+    }
+  });
+
+  return Array.from(categoryMap.entries())
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
 export function formatDate(date: string, includeRelative = false): string {
   const currentDate = new Date();
   if (!date.includes("T")) {
