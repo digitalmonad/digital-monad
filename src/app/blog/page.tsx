@@ -3,6 +3,7 @@ import {
   getAllTagsWithStats,
   getAllCategoriesWithStats,
   getBlogPosts,
+  sortByCount,
 } from "@/blog/utils/utils.posts";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
@@ -15,8 +16,8 @@ export const metadata = {
 
 export default function Page() {
   const posts = getBlogPosts();
-  const categories = getAllCategoriesWithStats(posts);
-  const tags = getAllTagsWithStats(posts);
+  const categories = getAllCategoriesWithStats(posts).sort(sortByCount);
+  const tags = getAllTagsWithStats(posts).sort(sortByCount);
 
   return (
     <div>
