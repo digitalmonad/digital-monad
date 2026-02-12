@@ -1,4 +1,4 @@
-import { getBlogPosts, formatDate } from "@/app/blog/utils";
+import { getBlogPosts, formatDate } from "@/blog/utils/blog-utils";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 

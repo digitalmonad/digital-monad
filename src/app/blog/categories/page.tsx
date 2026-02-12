@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getCategoriesWithCount } from "../utils";
+import { getCategoriesWithCount } from "../../../blog/utils/blog-utils";
 import { Badge } from "@/components/ui/badge";
 
 export default async function CategoriesPage() {
