@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { CustomMDX } from "@/components/mdx";
 import { formatDate, getBlogPosts } from "@/app/blog/utils";
 import { baseUrl } from "@/app/sitemap";
+import { ArrowLeftIcon } from "lucide-react";
+import Link from "next/link";
 
 export function generateStaticParams(): { slug: string }[] {
   const posts = getBlogPosts();
@@ -57,7 +59,7 @@ export function generateMetadata({
 }
 
 export default async function Blog({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+  const { slug } = await params;
 
   const post = getBlogPosts().find((post) => post.slug === slug);
 
@@ -89,14 +91,21 @@ export default async function Blog({ params }: { params: { slug: string } }) {
           }),
         }}
       />
-      <h1 className="title font-semibold text-2xl tracking-tighter">
-        {post.metadata.title}
-      </h1>
-      <div className="flex justify-between items-center mt-2 mb-8 text-sm">
+      <div className="flex relative items-center mt-2 mb-8 text-sm">
+        <Link
+          href={"/blog"}
+          className="absolute -left-10 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeftIcon />
+        </Link>
         <p className="text-sm text-neutral-600 dark:text-neutral-400">
           {formatDate(post.metadata.publishedAt)}
         </p>
       </div>
+      <h1 className="title font-semibold text-2xl tracking-tighter">
+        {post.metadata.title}
+      </h1>
+
       <article className="prose">
         <CustomMDX source={post.content} />
       </article>

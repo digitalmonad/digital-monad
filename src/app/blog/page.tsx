@@ -1,7 +1,8 @@
 import { BlogPosts } from "@/components/posts";
 import { getAllCategories, getAllTags } from "./utils";
 import Link from "next/link";
-import { BlogPageLayout } from "@/components/layouts";
+import { ArrowUpRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 export const metadata = {
   title: "Blog",
@@ -13,57 +14,58 @@ export default function Page() {
   const tags = getAllTags();
 
   return (
-    <BlogPageLayout
-      main={
-        <section>
-          <h1 className="font-semibold text-2xl mb-8 tracking-tighter">
-            My Blog
-          </h1>
-          <BlogPosts />
-        </section>
-      }
-      right={
-        <aside className="space-y-8">
-          <div>
-            <h2 className="font-semibold text-lg mb-4 tracking-tight">
+    <div className="">
+      <section>
+        <h1 className="font-semibold text-2xl mb-8 tracking-tighter">
+          My Blog
+        </h1>
+        <BlogPosts />
+      </section>
+      <aside className="w-full mt-8 lg:absolute md:w-72 xl:w-80 lg:right-0 lg:top-26 lg:pr-4 space-y-10">
+        <div>
+          <Link
+            href={"/blog/categories"}
+            className="flex text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowUpRight />
+            <h2 className="font-semibold text-lg mb-2 tracking-tight">
               Categories
             </h2>
-            <div className="flex flex-col space-y-2">
-              {categories.length > 0 ? (
-                categories.map((category) => (
-                  <Link
-                    key={category}
-                    href={`/blog/category/${category}`}
-                    className="text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors capitalize"
-                  >
-                    {category}
-                  </Link>
-                ))
-              ) : (
-                <p className="text-sm text-neutral-500">No categories yet</p>
-              )}
-            </div>
+          </Link>
+          <div className="flex flex-col space-y-2">
+            {categories.length > 0 ? (
+              categories.map((category) => (
+                <Link key={category} href={`/blog/categories/${category}`}>
+                  <Badge variant={"secondary"}>{category}</Badge>
+                </Link>
+              ))
+            ) : (
+              <p className="text-sm text-muted-foreground">No categories yet</p>
+            )}
           </div>
+        </div>
 
-          <div>
-            <h2 className="font-semibold text-lg mb-4 tracking-tight">Tags</h2>
-            <div className="flex flex-wrap gap-2">
-              {tags.length > 0 ? (
-                tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="inline-block px-3 py-1 text-sm rounded-sm bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors cursor-pointer"
-                  >
-                    #{tag}
-                  </span>
-                ))
-              ) : (
-                <p className="text-sm text-neutral-500">No tags yet</p>
-              )}
-            </div>
+        <div className="">
+          <Link
+            href={"/blog/tags"}
+            className="flex text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowUpRight />
+            <h2 className="font-semibold text-lg mb-2 tracking-tight">Tags</h2>
+          </Link>
+          <div className="flex flex-wrap gap-2">
+            {tags.length > 0 ? (
+              tags.map((tag) => (
+                <Link key={tag} href={`/blog/tags/${tag}`}>
+                  <Badge variant={"secondary"}>{tag}</Badge>
+                </Link>
+              ))
+            ) : (
+              <p className="text-sm text-muted-foreground">No tags yet</p>
+            )}
           </div>
-        </aside>
-      }
-    />
+        </div>
+      </aside>
+    </div>
   );
 }

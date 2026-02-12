@@ -57,7 +57,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Navbar />
-          {children}
+          <div className="max-w-xl mx-4 lg:mx-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
+            {children}
+          </div>
           <Footer />
           <Analytics />
           <SpeedInsights />

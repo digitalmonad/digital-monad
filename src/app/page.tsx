@@ -1,9 +1,8 @@
-import { PortfolioPageLayout } from "@/components/layouts";
 import { BlogPosts } from "@/components/posts";
 
 export default function Page() {
   return (
-    <PortfolioPageLayout>
+    <div className="">
       <h1 className="mb-8 text-2xl font-semibold tracking-tighter">
         My Portfolio
       </h1>
@@ -17,6 +16,6 @@ export default function Page() {
       <div className="my-8">
         <BlogPosts />
       </div>
-    </PortfolioPageLayout>
+    </div>
   );
 }
