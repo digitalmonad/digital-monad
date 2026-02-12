@@ -1,17 +1,17 @@
 import Link from "next/link";
 import {
-  getAllCategoriesWithStats,
+  getAllTagsWithStats,
   getBlogPosts,
   sortByName,
 } from "@/blog/utils/utils.posts";
 import { Badge } from "@/components/ui/badge";
 
-export default async function CategoriesPage() {
-  const categories = getAllCategoriesWithStats(getBlogPosts()).sort(sortByName);
+export default async function TagsPage() {
+  const categories = getAllTagsWithStats(getBlogPosts()).sort(sortByName);
 
   return (
     <div>
-      <h1>Categories</h1>
+      <h1>Tags</h1>
 
       <ul className="flex gap-2 flex-wrap">
         {categories.map((c) => (

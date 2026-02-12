@@ -1,4 +1,5 @@
-import { getBlogPosts, formatDate } from "@/blog/utils/blog-utils";
+import { getBlogPosts, sortPostsByDateDesc } from "@/blog/utils/utils.posts";
+import { formatDate } from "@/blog/utils/utils.date";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -17,21 +18,17 @@ export default async function CategoryPage({
     notFound();
   }
 
-  const sorted = postsForCategory.sort(
-    (a, b) =>
-      new Date(b.metadata.publishedAt).getTime() -
-      new Date(a.metadata.publishedAt).getTime(),
-  );
+  const sortedPosts = sortPostsByDateDesc(postsForCategory);
 
   return (
     <div className="container mx-auto max-w-4xl">
       <header className="mb-6">
         <h1>Category: {categoryName}</h1>
-        <p className="text-muted-foreground">{sorted.length} posts</p>
+        <p className="text-muted-foreground">{sortedPosts.length} posts</p>
       </header>
 
       <section className="space-y-4">
-        {sorted.map((post) => (
+        {sortedPosts.map((post) => (
           <Link
             key={post.slug}
             className="flex flex-col space-y-1 mb-4"

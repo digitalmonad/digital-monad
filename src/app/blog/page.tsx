@@ -1,5 +1,9 @@
 import { BlogPosts } from "@/blog/components/posts";
-import { getAllCategories, getAllTags } from "../../blog/utils/blog-utils";
+import {
+  getAllTagsWithStats,
+  getAllCategoriesWithStats,
+  getBlogPosts,
+} from "@/blog/utils/utils.posts";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -10,8 +14,9 @@ export const metadata = {
 };
 
 export default function Page() {
-  const categories = getAllCategories();
-  const tags = getAllTags();
+  const posts = getBlogPosts();
+  const categories = getAllCategoriesWithStats(posts);
+  const tags = getAllTagsWithStats(posts);
 
   return (
     <div>
@@ -33,8 +38,13 @@ export default function Page() {
           <div className="flex flex-wrap gap-1">
             {categories.length > 0 ? (
               categories.map((category) => (
-                <Link key={category} href={`/blog/categories/${category}`}>
-                  <Badge variant={"secondary"}>{category}</Badge>
+                <Link
+                  key={category.name}
+                  href={`/blog/categories/${category.name}`}
+                >
+                  <Badge variant={"secondary"}>
+                    {category.name} ({`${category.count}`})
+                  </Badge>
                 </Link>
               ))
             ) : (
@@ -54,8 +64,10 @@ export default function Page() {
           <div className="flex flex-wrap gap-1">
             {tags.length > 0 ? (
               tags.map((tag) => (
-                <Link key={tag} href={`/blog/tags/${tag}`}>
-                  <Badge variant={"secondary"}>{tag}</Badge>
+                <Link key={tag.name} href={`/blog/tags/${tag.name}`}>
+                  <Badge variant={"secondary"}>
+                    {tag.name} ({`${tag.count}`})
+                  </Badge>
                 </Link>
               ))
             ) : (
