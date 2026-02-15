@@ -17,7 +17,7 @@ export default async function CategoriesPage() {
         <>
           <h1>Categories</h1>
 
-          <ul className="flex gap-2 flex-wrap">
+          <ul className="flex flex-col gap-2">
             {categories.map((c) => (
               <li key={c.name}>
                 <Link href={`/blog/categories/${c.name}`}>

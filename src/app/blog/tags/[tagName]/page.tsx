@@ -27,7 +27,7 @@ export default async function TagPage({
       content={
         <>
           <header className="mb-6">
-            <h1>Category: {tagName}</h1>
+            <h1>Tag: {tagName}</h1>
             <p className="text-muted-foreground">{sortedPosts.length} posts</p>
           </header>
 

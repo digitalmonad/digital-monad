@@ -9,7 +9,7 @@ import { PageLayout } from "@/components/layouts";
 import { Sidebar } from "@/components/sidebar";
 
 export default async function TagsPage() {
-  const categories = getAllTagsWithStats(getBlogPosts()).sort(sortByName);
+  const tags = getAllTagsWithStats(getBlogPosts()).sort(sortByName);
 
   return (
     <PageLayout
@@ -17,12 +17,12 @@ export default async function TagsPage() {
         <>
           <h1>Tags</h1>
 
-          <ul className="flex gap-2 flex-wrap">
-            {categories.map((c) => (
-              <li key={c.name}>
-                <Link href={`/blog/categories/${c.name}`}>
+          <ul className="flex flex-col gap-2">
+            {tags.map((t) => (
+              <li key={t.name}>
+                <Link href={`/blog/tags/${t.name}`}>
                   <Badge variant="secondary">
-                    {c.name} ({c.count})
+                    {t.name} ({t.count})
                   </Badge>
                 </Link>
               </li>

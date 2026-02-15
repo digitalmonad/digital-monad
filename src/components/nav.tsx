@@ -13,6 +13,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { SearchDesktop, SearchMobile } from "@/blog/components/search";
 
 const navItems = {
   "/": {
@@ -26,7 +27,7 @@ const navItems = {
 export function MobileNavigtaion() {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className="md:hidden flex justify-between w-full items-center gap-2">
+    <div className="lg:hidden flex justify-between w-full items-center gap-2">
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
           <Button variant="secondary" size="icon">
@@ -77,26 +78,24 @@ export function MobileNavigtaion() {
           </div>
         </SheetContent>
       </Sheet>
-      <ThemeToggle />
+      <div className="flex gap-2">
+        <SearchMobile />
+        <ThemeToggle />
+      </div>
     </div>
   );
 }
 
-export function Navbar() {
+function DesktopNavigation() {
   return (
-    <aside className="sticky top-0 z-50 mb-16 tracking-tight max-w-7xl w-full mx-auto pt-4 pb-4 bg-background/80 backdrop-blur-xs">
-      <nav
-        className="flex flex-row items-center justify-between relative px-0 fade md:overflow-auto scroll-pr-6"
-        id="nav"
-      >
-        {/* Mobile Navigation */}
-        <MobileNavigtaion />
-        <span className="gap-2 items-center text-muted-foreground hidden md:flex">
-          <CircleDotIcon className="h-4 w-4" />
-          <span className="font-bold">Digital Monad</span>
-        </span>
-
-        <div className="hidden md:flex items-center">
+    <div className="hidden w-full lg:grid grid-cols-12">
+      <div className="col-span-3 gap-2 items-center text-muted-foreground flex">
+        <CircleDotIcon className="h-4 w-4 -mt-0.5" />
+        <span className="font-bold">Digital Monad</span>
+      </div>
+      <div className="col-span-9 flex items-center justify-between">
+        <SearchDesktop />
+        <div className="flex items-center">
           <div className="flex flex-row space-x-0">
             {Object.entries(navItems).map(([path, { name }]) => {
               return (
@@ -120,11 +119,26 @@ export function Navbar() {
                 <RssIcon className="text-muted-foreground/50 dark:text-muted-foreground hover:text-foreground stroke-background transition-[color] bg-background h-6 w-6" />
               </Link>
             </div>
+
             <div className="pl-4 ml-4 border-l py-1">
               <ThemeToggle />
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+export function Navbar() {
+  return (
+    <aside className="sticky top-0 z-50 mb-16 tracking-tight max-w-7xl w-full mx-auto pt-4 pb-4 bg-background/80 backdrop-blur-xs">
+      <nav
+        className="flex flex-row items-center justify-between relative px-0 scroll-pr-6"
+        id="nav"
+      >
+        <MobileNavigtaion />
+        <DesktopNavigation />
       </nav>
     </aside>
   );

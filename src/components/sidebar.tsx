@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, FolderIcon, HashIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 import {
@@ -19,9 +19,9 @@ export function Sidebar() {
       <div>
         <Link
           href={"/blog/categories"}
-          className="flex text-muted-foreground hover:text-foreground transition-colors"
+          className="flex text-muted-foreground hover:text-foreground transition-colors gap-2"
         >
-          <ArrowUpRight />
+          <FolderIcon />
           <h2 className="font-semibold text-lg mb-2 tracking-tight">
             Categories
           </h2>
@@ -37,7 +37,7 @@ export function Sidebar() {
                   variant={"secondary"}
                   className="text-md lg:text-xs hover:bg-foreground/20"
                 >
-                  {category.name} ({`${category.count}`})
+                  {category.name}
                 </Badge>
               </Link>
             ))
@@ -50,9 +50,9 @@ export function Sidebar() {
       <div className="">
         <Link
           href={"/blog/tags"}
-          className="flex text-muted-foreground hover:text-foreground transition-colors"
+          className="flex text-muted-foreground hover:text-foreground transition-colors gap-2"
         >
-          <ArrowUpRight />
+          <HashIcon />
           <h2 className="font-semibold text-lg mb-2 tracking-tight">Tags</h2>
         </Link>
         <div className="flex flex-wrap gap-2 lg:gap-1">
@@ -63,7 +63,7 @@ export function Sidebar() {
                   variant={"secondary"}
                   className="text-md lg:text-xs hover:bg-foreground/20"
                 >
-                  {tag.name} ({`${tag.count}`})
+                  {tag.name}
                 </Badge>
               </Link>
             ))
