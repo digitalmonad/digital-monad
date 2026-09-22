@@ -4,6 +4,7 @@
 # generated content
 .source
 
+/.pnpm-store/
 # test & build
 /coverage
 /.next/
@@ -24,3 +25,4 @@ yarn-error.log*
 .env*.local
 .vercel
 next-env.d.ts
+/.pnpm-store/

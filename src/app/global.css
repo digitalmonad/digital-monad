@@ -1,12 +1,439 @@
-@import 'tailwindcss';
-@import 'fumadocs-ui/css/neutral.css';
-@import 'fumadocs-ui/css/preset.css';
+@import "tailwindcss";
+@import "fumadocs-ui/css/preset.css";
+@import "fumadocs-ui/css/neutral.css";
+@import "../styles/scroll-fade-effect.css";
+@import "shadcn/tailwind.css";
+
+@import "tw-animate-css";
+@plugin "tailwind-scrollbar";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+@custom-variant supports-timeline-scroll {
+  @supports (animation-timeline: scroll()) {
+    @slot;
+  }
+}
+
+@source "../../node_modules/fumadocs-ui/dist/**/*.js";
+
+@theme {
+  --color-background: var(--color-fd-background);
+  --color-foreground: var(--color-fd-foreground);
+
+  --color-card: var(--color-fd-card);
+  --color-card-foreground: var(--color-fd-card-foreground);
+
+  --color-popover: var(--color-fd-popover);
+  --color-popover-foreground: var(--color-fd-popover-foreground);
+
+  --color-primary: var(--color-fd-primary);
+  --color-primary-foreground: var(--color-fd-primary-foreground);
+
+  --color-secondary: var(--color-fd-secondary);
+  --color-secondary-foreground: var(--color-fd-secondary-foreground);
+
+  --color-muted: var(--color-fd-muted);
+  --color-muted-foreground: var(--color-fd-muted-foreground);
+
+  --color-accent: var(--color-fd-accent);
+  --color-accent-foreground: var(--color-fd-accent-foreground);
+
+  /* --color-destructive: var(--color-fd-destructive);
+  --color-destructive-foreground: var(--color-fd-destructive-foreground); */
+  --color-destructive: hsl(0 84.2% 60.2%);
+  --color-destructive-foreground: hsl(0 0% 98%);
+
+  --color-border: var(--color-fd-border);
+  --color-input: var(--color-fd-border);
+  --color-ring: var(--color-fd-ring);
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  /* fonts */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
 
 html {
   scrollbar-gutter: stable;
 }
 
 html > body[data-scroll-locked] {
-  margin-right: 0px !important;
   --removed-body-scroll-bar-size: 0px !important;
+  margin-right: 0px !important;
+}
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+    --typography-hero-width: 56rem;
+    --typography-title-width: 40rem;
+    --typography-body-width: 60ch;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    @apply bg-background text-foreground antialiased;
+  }
+
+  html {
+    @apply scroll-smooth accent-primary scrollbar-thin scrollbar-track-transparent scrollbar-thumb-border dark:scrollbar-track-transparent;
+  }
+
+  [id] {
+    @apply scroll-mt-20;
+  }
+}
+
+@theme {
+  --color-fd-primary-foreground: hsl(0, 0%, 98%);
+  --color-fd-primary: hsl(226, 55%, 45%);
+  --color-fd-ring: hsl(0, 0%, 63.9%);
+}
+
+.dark {
+  --color-fd-ring: hsl(234, 100%, 83%);
+  --color-fd-primary: hsl(234, 100%, 83%);
+  --color-fd-primary-foreground: hsl(240, 7%, 11%);
+}
+
+@layer base {
+  a {
+    @apply [overflow-wrap:anywhere] decoration-wavy;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@utility container {
+  padding-inline: 0rem;
+  margin-inline: auto;
+
+  @apply 2xl:max-w-[1400px];
+}
+
+@utility link-underline {
+  @apply underline decoration-primary/60 decoration-1 underline-offset-3 transition-colors hover:decoration-primary;
+}
+
+@utility code-inline {
+  @apply rounded-md border bg-muted/50 px-1 py-px font-mono text-[0.8125rem] font-normal whitespace-pre-wrap;
+}
+
+@utility step {
+  counter-increment: step;
+  @apply max-md:pl-10;
+
+  &::before {
+    content: counter(step);
+    @apply absolute inline-flex size-6 items-center justify-center rounded-lg bg-muted text-center indent-0 text-[0.8125rem]/6 font-normal text-foreground max-md:left-0 md:-ml-10;
+  }
+}
+
+@utility prose-content {
+  @apply prose-headings:font-medium prose-headings:tracking-tight prose-headings:text-pretty md:prose-headings:text-balance prose-h2:text-xl prose-h3:text-lg;
+  @apply prose-a:font-normal prose-a:text-foreground prose-a:link-underline;
+  @apply prose-code:rounded-md prose-code:border prose-code:bg-muted/50 prose-code:px-1 prose-code:py-px prose-code:text-sm prose-code:font-normal prose-code:before:content-none prose-code:after:content-none;
+  @apply prose-strong:font-medium;
+  @apply prose-hr:border-border;
+  @apply prose-blockquote:border-l prose-blockquote:not-italic prose-blockquote:font-normal prose-blockquote:text-muted-foreground prose-blockquote:border-border prose-blockquote:[&_p:first-of-type]:before:content-none prose-blockquote:[&_p:last-of-type]:after:content-none;
+}
+
+@utility prose-no-margin {
+  & > :first-child {
+    @apply mt-0;
+  }
+
+  & > :last-child {
+    @apply mb-0;
+  }
+
+  :where(p):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    @apply mt-3 mb-3;
+  }
+}
+
+@utility extend-touch-target {
+  @media (pointer: coarse) {
+    @apply relative touch-manipulation after:absolute after:-inset-2;
+  }
+}
+
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer utilities {
+  .bg-dashed {
+    background-image: repeating-linear-gradient(
+      60deg,
+      transparent 0,
+      transparent 0.45rem,
+      var(--color-border) 0.45rem,
+      var(--color-border) 0.5rem
+    );
+  }
+
+  .border-border {
+    @apply border-border/70 dark:border-border;
+  }
+
+  .divide-border {
+    @apply divide-border/70 dark:divide-border;
+  }
+
+  .dashed-frame {
+    @apply border border-border border-dashed;
+  }
+
+  .dashed-stack {
+    @apply divide-y divide-dashed divide-border;
+  }
+
+  .divider-top-dashed {
+    @apply w-full border-border border-t border-dashed;
+  }
+
+  .divider-bottom-dashed {
+    @apply border-border border-b border-dashed;
+  }
+
+  .icon-pop {
+    @apply transition-transform hover:scale-125 will-change-transform;
+  }
+
+  .icon-tilt {
+    @apply transition-transform hover:rotate-12 hover:scale-125 will-change-transform;
+  }
+
+  .icon-tilt-reverse {
+    @apply transition-transform hover:-rotate-12 hover:scale-125 will-change-transform;
+  }
+
+  .icon-turn {
+    @apply transition-transform hover:rotate-90 hover:scale-125 will-change-transform;
+  }
+
+  .icon-arrow {
+    @apply transition-transform group-hover:-rotate-45 will-change-transform;
+  }
+
+  .icon-arrow-button {
+    @apply transition-transform group-hover/button:-rotate-45 will-change-transform;
+  }
+
+  .icon-turn-button {
+    @apply transition-transform group-hover/button:rotate-90 will-change-transform;
+  }
+
+  .typography-hero {
+    max-width: var(--typography-hero-width);
+  }
+
+  .typography-title {
+    max-width: var(--typography-title-width);
+  }
+
+  .typography-body {
+    max-width: var(--typography-body-width);
+  }
+}
+
+@layer components {
+  .footer {
+    --footer-text-size: clamp(3rem, 14rem, 14vw);
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    min-height: var(--footer-text-size);
+    overflow: clip;
+    color: var(--color-muted-foreground);
+  }
+
+  .footer-text {
+    position: absolute;
+    bottom: calc(-1 * var(--footer-text-size) / 1.6);
+    font-size: var(--footer-text-size);
+    font-weight: 900;
+    letter-spacing: 0;
+    opacity: 0.3;
+    text-rendering: geometricPrecision;
+  }
+
+  .footer-grid {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    flex: none;
+    overflow: visible;
+    background-color: transparent;
+    background-image: radial-gradient(transparent 1px, rgb(255, 255, 255) 1px);
+    background-size: 4px 4px;
+    opacity: 1;
+    backdrop-filter: blur(3px);
+    mask: linear-gradient(
+      rgba(255, 255, 255, 0) 0%,
+      rgb(255, 255, 255, 0.6) 100%
+    );
+  }
+
+  .footer-gradient {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(
+      rgba(255, 255, 255, 0) 0% 50%,
+      rgba(255, 255, 255, 0.5) 100%
+    );
+  }
+
+  .dark .footer-gradient {
+    background-image: linear-gradient(
+      rgba(0, 0, 0, 0) 0% 50%,
+      rgba(0, 0, 0, 0.5) 100%
+    );
+  }
+
+  .dark .footer-grid {
+    background-image: radial-gradient(transparent 1px, rgb(0, 0, 0) 1px);
+    mask: linear-gradient(rgba(0, 0, 0, 0) 0%, rgb(0, 0, 0, 0.6) 100%);
+  }
+}
+
+::selection {
+  color: var(--color-foreground);
+  background-color: var(--color-accent);
+}
+
+.dark ::selection {
+  color: var(--color-foreground);
+  background-color: var(--color-accent);
+}
+
+.dark [data-hide-on-theme="dark"],
+.light [data-hide-on-theme="light"] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-new(theme-transition) {
+    clip-path: inset(0 0 100% 0);
+    animation: slide-in-from-top 0.65s forwards cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  ::view-transition-old(theme-transition) {
+    animation: none;
+  }
+
+  @keyframes slide-in-from-top {
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  @keyframes reveal {
+    0% {
+      scale: 0.8;
+      opacity: 0;
+      translate: 0 4lh;
+      filter: blur(20px);
+    }
+  }
+
+  ::view-transition-new(.page-enter):only-child {
+    animation-name: reveal;
+  }
+
+  ::view-transition-old(.page-exit):only-child {
+    animation-name: reveal;
+    animation-direction: reverse;
+  }
+
+  /* util for faster than default (250ms) transitions. Typically used to make exits faster so they don't visually overlap with enters */
+  ::view-transition-group(.duration-100) {
+    animation-duration: 100ms;
+  }
+
+  @keyframes via-blur {
+    30% {
+      filter: blur(8px);
+    }
+  }
+
+  ::view-transition-image-pair(.via-blur) {
+    animation-name: via-blur;
+  }
+
+  ::view-transition-old(.via-blur) {
+    animation-duration: 180ms;
+    animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
+  }
+
+  ::view-transition-new(.via-blur) {
+    animation-duration: 350ms;
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    animation-delay: 100ms;
+  }
+
+  ::view-transition-group(.via-blur) {
+    animation-duration: 450ms;
+  }
+
+  /* Prevent background color flash during transition */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    mix-blend-mode: normal;
+    animation: none;
+  }
+}
+
+@keyframes ask-ai-open {
+  from {
+    width: 0px;
+  }
+  to {
+    width: var(--ai-chat-width);
+  }
+}
+
+@keyframes ask-ai-close {
+  from {
+    width: var(--ai-chat-width);
+  }
+  to {
+    width: 0px;
+  }
+}
+
+/* Prevent iOS Safari auto-zoom on input focus (triggers when font-size < 16px) */
+@media screen and (max-width: 768px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  select,
+  textarea {
+    font-size: max(16px, 1em);
+  }
+}
+
+@custom-variant retina {
+  @media (min-resolution: 2dppx) {
+    @slot;
+  }
 }
