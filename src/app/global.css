@@ -53,7 +53,7 @@
   --radius-sm: calc(var(--radius) - 4px);
 
   /* fonts */
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-merriweather);
   --font-mono: var(--font-geist-mono);
 }
 

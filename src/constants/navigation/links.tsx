@@ -9,12 +9,12 @@ export const linkItems: LinkItemType[] = [
     text: "About me",
     url: `${siteConfig.url}${siteConfig.links.about}`,
   },
-  {
-    active: "nested-url",
-    icon: <Icons.work />,
-    text: "Work",
-    url: `${siteConfig.url}${siteConfig.links.work}`,
-  },
+  //   {
+  //     active: "nested-url",
+  //     icon: <Icons.work />,
+  //     text: "Work",
+  //     url: `${siteConfig.url}${siteConfig.links.work}`,
+  //   },
   {
     active: "nested-url",
     icon: <Icons.blog />,

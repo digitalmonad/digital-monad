@@ -23,8 +23,7 @@ export default function About(): React.ReactElement {
           <div className="space-y-4">
             <Prose className="typography-body w-full space-y-4">
               <p className="text-lg">
-                I'm Pavel, a full-stack developer who builds all kinds of web
-                apps.
+                I'm a full-stack developer who builds all kinds of web apps.
               </p>
               <p className="text-lg">
                 My stack is Next.js, TypeScript, tRPC, Drizzle, and PostgreSQL.

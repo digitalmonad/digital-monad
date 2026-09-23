@@ -11,18 +11,17 @@ export default function CTA(): React.ReactElement {
       <div className="grid place-items-center gap-4 rounded-xl border bg-card p-8 shadow-sm sm:p-16">
         <div>
           <h2 className="typography-title text-balance text-center font-regular text-3xl tracking-tighter sm:text-5xl">
-            Let's Collaborate
+            Let's build!
           </h2>
         </div>
 
         <div className="flex flex-col items-center gap-4">
           <div>
             <p className="typography-body text-pretty text-center text-muted-foreground sm:text-xl">
-              Have questions or want to connect? Reach out through the contact
-              form or find me on social platforms.
+              You can reach me via social networks or email.
             </p>
           </div>
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+          {/* <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
             <div>
               <Button asChild size="lg">
                 <Link href={`${siteConfig.url}${siteConfig.links.contact}`}>
@@ -31,7 +30,7 @@ export default function CTA(): React.ReactElement {
                 </Link>
               </Button>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </Section>

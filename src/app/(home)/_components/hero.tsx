@@ -28,15 +28,14 @@ const Hero = () => {
           "md:text-5xl",
         )}
       >
-        Hi! I'm Pavel
+        I'm Pavel
       </h1>
       <p className="max-w-sm text-pretty text-center text-base text-muted-foreground leading-relaxed tracking-tight sm:max-w-xl sm:text-lg md:text-xl">
-        I'm a design engineer and full-stack developer who blends design and
-        development to build beautiful, functional websites.
+        Fullstack software developer
       </p>
 
       <div className="mt-2 flex flex-wrap items-center justify-center gap-4">
-        <Link
+        {/* <Link
           className={cn(
             buttonVariants({
               size: "lg",
@@ -48,7 +47,7 @@ const Hero = () => {
         >
           Browse Work
           <Icons.arrowRight className="icon-arrow-button size-5" />
-        </Link>
+        </Link> */}
 
         <div className="flex items-center space-x-4">
           {navItems

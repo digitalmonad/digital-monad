@@ -42,12 +42,12 @@ const Skills = () => (
       <SectionHeader
         align="left"
         className="px-6"
-        description="Focused on building practical projects with modern tools"
-        title="My Expertise"
+        description=""
+        title="Tools"
       />
 
       <div className="divider-top-dashed">
-        <div className="grid grid-cols-1 divide-dashed divide-border text-left lg:grid-cols-3 lg:divide-x [&>*:last-child]:border-b-0 lg:[&>*:nth-last-child(-n+3)]:border-b-0 [&>*]:border-border [&>*]:border-b [&>*]:border-dashed">
+        {/* <div className="grid grid-cols-1 divide-dashed divide-border text-left lg:grid-cols-3 lg:divide-x [&>*:last-child]:border-b-0 lg:[&>*:nth-last-child(-n+3)]:border-b-0 [&>*]:border-border [&>*]:border-b [&>*]:border-dashed">
           {skills.map((feature) => (
             <div
               className={featureItemVariants({
@@ -66,7 +66,7 @@ const Skills = () => (
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
 
         <div className="divider-top-dashed">
           {Object.entries(groupByCategory(technologies)).map(

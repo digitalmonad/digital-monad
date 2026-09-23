@@ -28,13 +28,13 @@ export default async function Home() {
       <>
         <Hero />
         <Separator />
-        <About />
-        <Separator />
-        <Skills />
-        <Separator />
+        {/* <About />
+        <Separator /> */}
         <WorkPreview />
         <Separator />
-        <Contributions contributions={contributions} />
+        {/* <Contributions contributions={contributions} />
+        <Separator /> */}
+        <Skills />
         <Separator />
         <CTA />
       </>

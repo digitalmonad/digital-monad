@@ -15,11 +15,11 @@ export const skills: Skill[] = [
     title: "App Development",
   },
   {
-    description: "Exploring possibilities of FFMPEG and AI models",
+    description: "Exploring possibilities of multimedia processing",
     Icon: Icons.camera,
     id: 2,
     size: "sm",
-    title: "Video & audio processing",
+    title: "Video & audio",
   },
   {
     description: "Controlling machine workflows",
