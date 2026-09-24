@@ -1,11 +1,11 @@
 import { createGetUrl } from "fumadocs-core/source";
 
 export const appName = "digitalmonad";
-export const docsRoute = "/docs";
-export const docsImageRoute = "/og/docs";
-export const docsContentRoute = "/llms.mdx/docs";
+export const blogRoute = "/blog";
+export const blogImageRoute = "/og/blog";
+export const blogContentRoute = "/llms.mdx/blog";
 
-const getContentUrl = createGetUrl(docsContentRoute);
+const getContentUrl = createGetUrl(blogContentRoute);
 
 export function getPageMarkdownUrl(page: { slugs: string[]; locale?: string }) {
   const segments = [...page.slugs, "content.md"];
@@ -13,7 +13,7 @@ export function getPageMarkdownUrl(page: { slugs: string[]; locale?: string }) {
   return { segments, url: getContentUrl(segments, page.locale) };
 }
 
-const getImageUrl = createGetUrl(docsImageRoute);
+const getImageUrl = createGetUrl(blogImageRoute);
 
 export function getPageImageUrl(page: { slugs: string[]; locale?: string }) {
   const segments = [...page.slugs, "image.png"];

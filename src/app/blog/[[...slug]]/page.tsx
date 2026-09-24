@@ -14,7 +14,7 @@ import { createRelativeLink } from "fumadocs-ui/mdx";
 import { siteConfig } from "@/constants/site";
 import { getPageImageUrl, getPageMarkdownUrl } from "@/lib/shared";
 
-export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
+export default async function Page(props: PageProps<"/blog/[[...slug]]">) {
   const params = await props.params;
   const page = source.getPage(params.slug);
   if (!page) notFound();
@@ -52,7 +52,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata(
-  props: PageProps<"/docs/[[...slug]]">,
+  props: PageProps<"/blog/[[...slug]]">,
 ): Promise<Metadata> {
   const params = await props.params;
   const page = source.getPage(params.slug);

@@ -1,0 +1,118 @@
+---
+title: Async/Await and Continuations
+description: How asynchronous JavaScript suspends one computation and resumes it later.
+---
+
+# Async/Await and Continuations
+
+An asynchronous function looks sequential, but it does not occupy the JavaScript call stack while it waits. At an `await`, the function gives control back to the runtime and registers the rest of its work as a continuation.
+
+## A promise represents a future result
+
+A promise represents an operation that may complete later:
+
+```js
+const response = fetch('/api/user');
+```
+
+The `fetch` call returns immediately with a promise. The response is not available yet, so the current computation must describe what to do after the promise settles.
+
+Using an explicit callback, the shape is visible:
+
+```js
+fetch('/api/user').then(response => {
+  return response.json();
+}).then(user => {
+  console.log(user.name);
+});
+```
+
+Each callback is a continuation: it describes the next part of the computation.
+
+## `await` makes the boundary readable
+
+`async`/`await` gives the same behavior a sequential syntax:
+
+```js
+async function printUserName() {
+  const response = await fetch('/api/user');
+  const user = await response.json();
+  console.log(user.name);
+}
+```
+
+The function does not block the thread at either `await`. Instead, the runtime roughly performs these steps:
+
+1. Start the asynchronous operation.
+2. Save the continuation after `await`.
+3. Return control to the event loop.
+4. Resume the continuation when the promise settles.
+
+The source reads like a single sequence, but execution is split into multiple turns.
+
+## The call stack is emptied
+
+Consider this example:
+
+```js
+async function work() {
+  console.log('before');
+  await Promise.resolve();
+  console.log('after');
+}
+
+work();
+console.log('outside');
+```
+
+The output is:
+
+```text
+before
+outside
+after
+```
+
+After the first log, `work` suspends. Its continuation is scheduled as a microtask, allowing the current stack to finish before `after` is printed.
+
+## Errors are part of the continuation
+
+An awaited rejection resumes the function through its error path:
+
+```js
+async function loadUser() {
+  try {
+    const response = await fetch('/api/user');
+    return await response.json();
+  } catch (error) {
+    console.error('Could not load user', error);
+    return null;
+  }
+}
+```
+
+The runtime must preserve both normal and exceptional control flow. A suspended computation is not only “the next successful line”; it also contains the rules for what happens if the operation fails.
+
+## Async functions are resumable, not durable
+
+An `async` function can be suspended and resumed, but its state remains in process memory. A server restart loses the pending function. An `await` also does not automatically make an external side effect safe to retry:
+
+```js
+await payments.charge(customerId, amount);
+```
+
+If the process crashes immediately after the charge succeeds, the caller may not know whether retrying is safe. Durable systems solve this by recording progress and designing effects with idempotency, deduplication, or compensation.
+
+## The central idea
+
+`async`/`await` is syntax for managing continuations around promises. It changes when execution runs, not the fundamental model:
+
+```text
+current state
+  → start an effect
+  → save continuation
+  → wait for completion
+  → resume with a value or error
+```
+
+The next question is how to represent these continuations independently of a single JavaScript call stack.

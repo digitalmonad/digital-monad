@@ -1,10 +1,10 @@
 import { llms, loader } from 'fumadocs-core/source';
-import { docsContentRoute, docsImageRoute, docsRoute } from './shared';
+import { blogContentRoute, blogImageRoute, blogRoute } from './shared';
 import { defineDocs } from 'fumadocs-mdx/macro';
 import { metaSchema, pageSchema } from 'fumadocs-core/source/schema';
 
 const docs = defineDocs({
-  dir: 'content/docs',
+  dir: 'content/blog',
   docs: {
     schema: pageSchema,
     postprocess: {
@@ -18,7 +18,7 @@ const docs = defineDocs({
 
 // See https://fumadocs.dev/docs/headless/source-api for more info
 export const source = loader({
-  baseUrl: docsRoute,
+  baseUrl: blogRoute,
   source: docs.toFumadocsSource(),
   plugins: [],
 });

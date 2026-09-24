@@ -19,6 +19,6 @@ export const linkItems: LinkItemType[] = [
     active: "nested-url",
     icon: <Icons.blog />,
     text: "Blog",
-    url: `${siteConfig.url}${siteConfig.links.docs}`,
+    url: `${siteConfig.url}${siteConfig.links.blog}`,
   },
 ];

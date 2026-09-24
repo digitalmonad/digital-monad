@@ -1,0 +1,102 @@
+---
+title: Iterators and Generators
+description: How JavaScript turns a suspended function into a resumable computation.
+---
+
+# Iterators and Generators
+
+The previous article described execution as a sequence of state transitions. An iterator gives us a small, practical interface for observing those transitions one at a time.
+
+## The iterator protocol
+
+An iterator is an object with a `next()` method. Each call returns a result object:
+
+```js
+const iterator = {
+  next() {
+    return { value: 42, done: false };
+  },
+};
+
+iterator.next(); // { value: 42, done: false }
+```
+
+The `value` is the current result. `done` tells the consumer whether the computation has finished. A completed iterator may return a final value, although ordinary `for...of` loops ignore that value.
+
+This protocol separates the producer from the consumer. The producer decides how to make progress; the consumer decides when to request the next step.
+
+## A generator is a suspended function
+
+Generators provide a convenient way to implement the protocol. The `function*` syntax creates a generator function, and `yield` suspends it:
+
+```js
+function* countTo(limit) {
+  for (let value = 1; value <= limit; value += 1) {
+    yield value;
+  }
+}
+
+const counter = countTo(3);
+
+counter.next(); // { value: 1, done: false }
+counter.next(); // { value: 2, done: false }
+counter.next(); // { value: 3, done: false }
+counter.next(); // { value: undefined, done: true }
+```
+
+Calling `countTo` does not execute the body immediately. It creates a suspended computation. The body runs until the first `yield`, then its local variables and continuation are preserved by the generator object.
+
+## `yield` preserves more than a value
+
+When a generator pauses, it preserves the point at which it stopped, local variables, and the information needed to continue. The next call resumes execution after the corresponding `yield`:
+
+```js
+function* conversation() {
+  const name = yield 'What is your name?';
+  const answer = yield `Hello, ${name}. How are you?`;
+  return `You said: ${answer}`;
+}
+
+const dialogue = conversation();
+
+dialogue.next();
+// { value: 'What is your name?', done: false }
+
+dialogue.next('Ada');
+// { value: 'Hello, Ada. How are you?', done: false }
+
+dialogue.next('great');
+// { value: 'You said: great', done: true }
+```
+
+The argument passed to `next` becomes the result of the suspended `yield` expression. This makes a generator bidirectional: it can produce a value and receive a value when resumed.
+
+## Generators as explicit state machines
+
+Conceptually, the generator above is equivalent to a state machine:
+
+```text
+state 0 → ask for a name → state 1
+state 1 → ask how the user feels → state 2
+state 2 → return the final sentence → done
+```
+
+The JavaScript engine hides the state machine implementation, but the observable behavior is the same. A generator is therefore useful whenever a computation should be paused at well-defined points.
+
+## Iteration is a control boundary
+
+The important property is not laziness by itself. It is control. The caller owns the boundary between steps:
+
+```js
+for (const value of countTo(3)) {
+  console.log(value);
+}
+```
+
+`for...of` repeatedly calls `next()` until `done` becomes `true`. Other consumers can stop early, interleave several iterators, or persist their own progress.
+
+Generators do not automatically make arbitrary JavaScript execution durable. Their state still lives in the current process. If the process exits, the generator disappears. They do, however, make the continuation explicit enough to build interpreters, parsers, schedulers, and cooperative coroutines.
+
+## What comes next
+
+Generators pause synchronously. The next step is to understand what changes when the suspended operation is asynchronous. That is where promises and `async`/`await` enter the model.

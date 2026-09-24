@@ -9,7 +9,7 @@ export function baseOptions(): BaseLayoutProps {
     links: [
       { text: "About", url: "/#about", type: "main" },
       { text: "Work", url: "/#work", type: "main" },
-      { text: "Blog", url: "/docs", type: "main" },
+      { text: "Blog", url: "/blog", type: "main" },
       { text: "Contact", url: "/#contact", type: "button" },
     ],
   };

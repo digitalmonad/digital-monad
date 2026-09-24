@@ -1,0 +1,108 @@
+---
+title: Durable Execution
+description: How persisted state and effect history let a computation survive process failures.
+---
+
+# Durable Execution
+
+An in-memory continuation disappears when its process disappears. Durable execution changes that property by storing enough information to reconstruct progress after a crash or restart.
+
+## What must survive?
+
+A durable system usually needs to preserve at least:
+
+- the workflow identity;
+- the current logical position;
+- input and local state needed for the next step;
+- completed effect history;
+- failure, retry, and cancellation state.
+
+The exact representation varies. Some systems persist a serialized state machine; others persist an append-only event history and replay it to rebuild state.
+
+## Event history as a recording
+
+Suppose a workflow sends an email and then updates a database:
+
+```text
+WorkflowStarted
+EmailSent
+UserMarkedComplete
+```
+
+After a restart, the runtime can replay the history. It knows that the email step already completed and resumes at the database update rather than sending the email again.
+
+The history is not merely logging. It is part of the correctness mechanism: it tells the runtime which transitions have already happened.
+
+## Replay and determinism
+
+Replay works only when the workflow code makes consistent decisions from the same recorded inputs. Nondeterministic operations must be isolated or recorded:
+
+```js
+// These values should not be read freely during replay:
+Date.now();
+Math.random();
+await fetch('/external-service');
+```
+
+A durable runtime can provide deterministic wrappers, record the result of an activity, or move the operation outside the replayed workflow code. The goal is that replay reconstructs the same logical state without repeating unsafe effects.
+
+## Activities and side effects
+
+External operations are often modeled as activities:
+
+```js
+const user = await activity('load-user', () => database.find(userId));
+await activity('send-email', () => mailer.send(user.email));
+```
+
+The runtime can retry an activity, record its result, and apply timeouts or cancellation. The activity still needs a safe retry policy. Idempotency keys are a common tool:
+
+```js
+await payments.charge({
+  customerId,
+  amount,
+  idempotencyKey: `order:${orderId}`,
+});
+```
+
+If the same logical operation is attempted again, the external service can recognize it as a duplicate.
+
+## Exactly-once is usually a protocol
+
+It is tempting to describe durable execution as “exactly once.” In distributed systems, that guarantee is rarely a property of one function call. It emerges from cooperation between the runtime and every external system involved.
+
+A practical design often combines:
+
+1. at-least-once delivery or retry;
+2. durable recording of completed work;
+3. idempotent effect handlers;
+4. explicit compensation for effects that cannot be undone.
+
+The result is not that a network request can never be sent twice. It is that duplicate attempts do not produce an incorrect logical outcome.
+
+## The recovery loop
+
+The complete model looks like this:
+
+```text
+load history
+  → reconstruct logical state
+  → find the next transition
+  → execute or schedule an effect
+  → record its result
+  → repeat
+```
+
+The workflow may run for seconds or years, on one process or many. The important unit is no longer the JavaScript stack frame. It is the durable sequence of transitions and effects.
+
+## Closing the series
+
+Iterators exposed one step of a computation. `async`/`await` exposed continuations around asynchronous effects. Coroutines added scheduling and communication. Durable execution extends the same model beyond a process lifetime.
+
+The common abstraction is simple:
+
+```text
+state + transition + effect history → recoverable computation
+```
+
+Once this model is clear, many “advanced” runtime features become variations on the same question: what part of execution is represented, who controls the next transition, and what survives failure?

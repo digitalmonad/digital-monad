@@ -1,0 +1,101 @@
+---
+title: Coroutines and Cooperative Scheduling
+description: How resumable computations share control without relying on nested function calls.
+---
+
+# Coroutines and Cooperative Scheduling
+
+A function call gives control to the callee until it returns. A coroutine can give control away and later continue from the same point. This makes multiple computations composable even when only one is actively running at a time.
+
+## Yielding control
+
+The simplest coroutine uses a generator:
+
+```js
+function* task(name) {
+  console.log(`${name}: step 1`);
+  yield;
+  console.log(`${name}: step 2`);
+  yield;
+  console.log(`${name}: done`);
+}
+```
+
+A scheduler can alternate between tasks:
+
+```js
+const tasks = [task('A'), task('B')];
+
+let active = true;
+while (active) {
+  active = false;
+
+  for (const current of tasks) {
+    const result = current.next();
+    if (!result.done) active = true;
+  }
+}
+```
+
+The tasks cooperate. Each one must yield; a task that performs an infinite synchronous loop prevents every other task from running.
+
+## Cooperative versus preemptive scheduling
+
+In cooperative scheduling, the running computation chooses when to yield. This is simple and predictable, but it requires well-behaved tasks. In preemptive scheduling, the runtime can interrupt a task after a time slice.
+
+JavaScript's ordinary execution is largely cooperative. A long synchronous function blocks the event loop until it returns. Promises and timers create opportunities for other work, but they do not interrupt a currently executing JavaScript function.
+
+## Passing messages between coroutines
+
+Coroutines become more useful when they exchange values:
+
+```js
+function* worker() {
+  while (true) {
+    const job = yield;
+    if (job === null) return 'stopped';
+    console.log(`processing ${job}`);
+  }
+}
+
+const current = worker();
+current.next();
+current.next('first job');
+current.next('second job');
+current.next(null);
+```
+
+The generator is both a suspended computation and a communication endpoint. A more complete runtime might put these values into queues and wake a coroutine when a message arrives.
+
+## Scheduling is a policy
+
+The coroutine itself describes possible progress. The scheduler decides when progress happens. Different policies produce different behavior:
+
+- Round-robin scheduling gives each task a turn.
+- Priority scheduling favors urgent work.
+- Backpressure pauses producers when consumers are overloaded.
+- Cancellation asks a task to stop before it completes.
+
+Separating computation from scheduling is valuable because the same task can run under different policies.
+
+## Cancellation and cleanup
+
+Stopping a suspended computation is not always enough. It may own a file, a lock, a network connection, or an in-flight request. A coroutine abstraction therefore needs a cleanup path:
+
+```js
+function* resourceUser(resource) {
+  try {
+    yield resource.use();
+  } finally {
+    resource.close();
+  }
+}
+```
+
+The `finally` block expresses an important invariant: once the resource is acquired, it must eventually be released, even when the computation is cancelled or fails.
+
+## From local schedulers to workflows
+
+A local scheduler can keep its tasks in memory. A workflow engine extends the same idea across time and process boundaries. It must record which task is active, which messages have been delivered, and which effects have completed.
+
+That transition introduces persistence, replay, idempotency, and recovery. The next article applies the state-machine model to those concerns.

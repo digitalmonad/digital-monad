@@ -10,7 +10,7 @@ export const siteConfig = {
   links: {
     about: "/about",
     contact: "/contact",
-    docs: "/docs",
+    blog: "/blog",
     rss: "/rss.xml",
     sitemap: "/sitemap.xml",
     work: "/work",
